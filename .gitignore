@@ -1,0 +1,9 @@
+**/.vs
+**/.vscode
+**/.idea
+**/bin
+**/obj
+**/*.*proj.user
+**/*.*DotSettings.user
+**/*.*pubxml
+**/*.*pubxml.user
