@@ -1,4 +1,4 @@
-namespace Worker.Application.Services;
+namespace Worker.Application.Ports;
 
 public interface IEmailService
 {

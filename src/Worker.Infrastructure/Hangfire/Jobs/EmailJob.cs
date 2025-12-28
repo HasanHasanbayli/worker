@@ -1,8 +1,6 @@
-using Worker.Application.JobState;
-using Worker.Application.Scheduling;
-using Worker.Application.Services;
+using Worker.Application.Ports;
 
-namespace Worker.Application.Jobs;
+namespace Worker.Infrastructure.Hangfire.Jobs;
 
 public class EmailJob(IJobStateService jobStateService, IEmailService emailService) : IRecurringJob
 {

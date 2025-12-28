@@ -1,6 +1,6 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Worker.Application.Persistence;
+using Worker.Application.Ports;
 
 namespace Worker.Infrastructure.Persistence;
 

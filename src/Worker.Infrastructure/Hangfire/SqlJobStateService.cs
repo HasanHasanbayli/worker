@@ -1,8 +1,7 @@
 using Microsoft.Data.SqlClient;
-using Worker.Application.JobState;
-using Worker.Application.Persistence;
+using Worker.Application.Ports;
 
-namespace Worker.Infrastructure.Persistence;
+namespace Worker.Infrastructure.Hangfire;
 
 public class SqlJobStateService(IDbCommandExecutor sqlCommandExecutor) : IJobStateService
 {

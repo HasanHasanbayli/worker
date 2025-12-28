@@ -1,4 +1,4 @@
-namespace Worker.Application.JobState;
+namespace Worker.Application.Ports;
 
 public interface IJobStateService
 {

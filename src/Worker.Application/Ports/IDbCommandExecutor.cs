@@ -1,6 +1,6 @@
 using Microsoft.Data.SqlClient;
 
-namespace Worker.Application.Persistence;
+namespace Worker.Application.Ports;
 
 public interface IDbCommandExecutor
 {

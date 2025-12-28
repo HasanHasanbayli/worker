@@ -1,4 +1,4 @@
-namespace Worker.Application.Scheduling;
+namespace Worker.Application.Ports;
 
 public interface IRecurringJob
 {

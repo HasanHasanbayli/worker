@@ -1,8 +1,7 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Worker.Application.Persistence;
-using Worker.Application.Scheduling;
+using Worker.Application.Ports;
 
 namespace Worker.Infrastructure.Hangfire;
 

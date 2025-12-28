@@ -1,5 +1,5 @@
 using Hangfire;
-using Worker.Application.Scheduling;
+using Worker.Application.Ports;
 
 namespace Worker.Infrastructure.Hangfire;
 

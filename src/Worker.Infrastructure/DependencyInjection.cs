@@ -1,9 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Worker.Application.JobState;
-using Worker.Application.Persistence;
-using Worker.Application.Services;
+using Worker.Application.Ports;
 using Worker.Infrastructure.Hangfire;
+using Worker.Infrastructure.Hangfire.Jobs;
 using Worker.Infrastructure.Persistence;
 using Worker.Infrastructure.Services;
 using SqlCommandExecutor = Worker.Infrastructure.Persistence.SqlCommandExecutor;
@@ -20,6 +19,10 @@ public static class DependencyInjection
 
         services.AddScoped<IDbCommandExecutor, SqlCommandExecutor>();
         services.AddScoped<IJobStateService, SqlJobStateService>();
+
+        // Register Recurring Jobs
+        services.AddScoped<IRecurringJob, EmailJob>();
+        services.AddScoped<IRecurringJob, SmsJob>();
 
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<ISmsService, SmsService>();
