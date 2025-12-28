@@ -5,7 +5,6 @@ using Worker.Infrastructure.Hangfire;
 using Worker.Infrastructure.Hangfire.Jobs;
 using Worker.Infrastructure.Persistence;
 using Worker.Infrastructure.Services;
-using SqlCommandExecutor = Worker.Infrastructure.Persistence.SqlCommandExecutor;
 
 namespace Worker.Infrastructure;
 
@@ -23,6 +22,7 @@ public static class DependencyInjection
         // Register Recurring Jobs
         services.AddScoped<IRecurringJob, EmailJob>();
         services.AddScoped<IRecurringJob, SmsJob>();
+        services.AddScoped<IRecurringJob, CustomLogicJob>();
 
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<ISmsService, SmsService>();
