@@ -14,7 +14,7 @@ public sealed class SqlCommandExecutor(IConfiguration configuration) : IDbComman
         IReadOnlyList<SqlParameter>? parameters = null,
         CancellationToken cancellationToken = default)
     {
-        await using var command = await CreateCommand(query, connectionString, parameters, cancellationToken);
+        await using SqlCommand command = await CreateCommand(query, connectionString, parameters, cancellationToken);
 
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
@@ -25,7 +25,7 @@ public sealed class SqlCommandExecutor(IConfiguration configuration) : IDbComman
         IReadOnlyList<SqlParameter>? parameters = null,
         CancellationToken cancellationToken = default)
     {
-        await using var command = await CreateCommand(query, connectionString, parameters, cancellationToken);
+        await using SqlCommand command = await CreateCommand(query, connectionString, parameters, cancellationToken);
 
         var result = await command.ExecuteScalarAsync(cancellationToken);
 
@@ -47,8 +47,8 @@ public sealed class SqlCommandExecutor(IConfiguration configuration) : IDbComman
 
         try
         {
-            await using var command = await CreateCommand(query, connectionString, parameters, cancellationToken);
-            await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+            await using SqlCommand command = await CreateCommand(query, connectionString, parameters, cancellationToken);
+            await using SqlDataReader? reader = await command.ExecuteReaderAsync(cancellationToken);
 
             while (await reader.ReadAsync(cancellationToken))
             {
@@ -80,8 +80,8 @@ public sealed class SqlCommandExecutor(IConfiguration configuration) : IDbComman
     {
         connectionString ??= _defaultConnectionString;
 
-        var connection = new SqlConnection(connectionString);
-        var command = new SqlCommand(query, connection);
+        SqlConnection connection = new(connectionString);
+        SqlCommand command = new(query, connection);
 
         if (parameters is { Count: > 0 })
         {
