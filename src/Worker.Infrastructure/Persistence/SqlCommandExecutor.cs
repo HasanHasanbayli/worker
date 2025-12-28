@@ -56,8 +56,10 @@ public sealed class SqlCommandExecutor(IConfiguration configuration) : IDbComman
 
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
+                    string name = reader.GetName(i);
                     object value = reader.GetValue(i);
-                    row[reader.GetName(i)] = value == DBNull.Value ? null : value;
+
+                    row[name] = value == DBNull.Value ? null : value;
                 }
 
                 results.Add(row);
@@ -70,7 +72,6 @@ public sealed class SqlCommandExecutor(IConfiguration configuration) : IDbComman
             return results;
         }
     }
-
 
     private async Task<SqlCommand> CreateCommand(
         string query,
