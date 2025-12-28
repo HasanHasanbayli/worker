@@ -3,24 +3,21 @@ using Worker.Application;
 using Worker.Infrastructure;
 using Worker.Infrastructure.Hangfire;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+IServiceCollection services = builder.Services;
+IConfiguration configuration = builder.Configuration;
 
-builder.Services.AddWorkerApplication();
-builder.Services.AddOpenApi();
+services.AddHangfire(config =>
+    config.UseSqlServerStorage(configuration.GetConnectionString("HangfireConnection")));
 
-builder.Services.AddHangfire(config =>
-    config.UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnection")));
-
-builder.Services.AddHangfireServer();
-
-builder.Services.AddHealthChecks();
+services.AddHangfireServer();
+services.AddHealthChecks();
 
 // App layers
-builder.Services
-    .AddWorkerApplication()
-    .AddInfrastructure(builder.Configuration);
+services.AddWorkerApplication();
+services.AddInfrastructure(configuration);
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 app.UseHangfireDashboard("", new DashboardOptions());
 
