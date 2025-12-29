@@ -43,12 +43,12 @@ public sealed class SqlCommandExecutor(IConfiguration configuration) : IDbComman
         try
         {
             await using SqlCommand command = await CreateCommand(query, parameters, cancellationToken);
-            await using SqlDataReader? reader = await command.ExecuteReaderAsync(cancellationToken);
+            await using SqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
 
             List<Dictionary<string, object?>> results = [];
             while (await reader.ReadAsync(cancellationToken))
             {
-                var row = new Dictionary<string, object?>(reader.FieldCount);
+                Dictionary<string, object?> row = new(reader.FieldCount);
 
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
