@@ -1,4 +1,3 @@
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Worker.Application.Ports;
@@ -12,18 +11,20 @@ public sealed class JobStateInitializerHostedService(IServiceProvider servicePro
     {
         using var scope = serviceProvider.CreateScope();
 
-        var sqlHelperService = scope.ServiceProvider.GetRequiredService<IDbCommandExecutor>();
+        var sqlSessionFactory = scope.ServiceProvider.GetRequiredService<ISqlSessionFactory>();
+        await using var sqlSession = await sqlSessionFactory.OpenAsync(cancellationToken);
+
         var jobs = scope.ServiceProvider.GetServices<IRecurringJob>();
 
-        await EnsureTableAsync(sqlHelperService, cancellationToken);
-        await SeedJobsAsync(sqlHelperService, jobs, cancellationToken);
+        await EnsureTableAsync(sqlSession, cancellationToken);
+        await SeedJobsAsync(sqlSession, jobs, cancellationToken);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
         => Task.CompletedTask;
 
     private static Task EnsureTableAsync(
-        IDbCommandExecutor sqlHelperService,
+        ISqlSession sqlHelperService,
         CancellationToken cancellationToken)
     {
         const string sql = """
@@ -47,11 +48,11 @@ public sealed class JobStateInitializerHostedService(IServiceProvider servicePro
                                END
                            """;
 
-        return sqlHelperService.ExecuteAsync(query: sql, cancellationToken: cancellationToken);
+        return sqlHelperService.ExecuteAsync(sql, cancellationToken: cancellationToken);
     }
 
     private static async Task SeedJobsAsync(
-        IDbCommandExecutor sqlHelperService,
+        ISqlSession sqlHelperService,
         IEnumerable<IRecurringJob> jobs,
         CancellationToken cancellationToken)
     {
@@ -70,7 +71,7 @@ public sealed class JobStateInitializerHostedService(IServiceProvider servicePro
         foreach (var job in jobs)
         {
             await sqlHelperService.ExecuteAsync(
-                query: sql, parameters: [new SqlParameter("@JobId", job.JobId)],
+                sql, parameters: [new SqlParameter("@JobId", job.JobId)],
                 cancellationToken: cancellationToken);
         }
     }
