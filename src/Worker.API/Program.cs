@@ -1,4 +1,5 @@
 using Hangfire;
+using Hangfire.SqlServer;
 using Worker.Application;
 using Worker.Infrastructure;
 using Worker.Infrastructure.Hangfire;
@@ -8,7 +9,17 @@ IServiceCollection services = builder.Services;
 IConfiguration configuration = builder.Configuration;
 
 services.AddHangfire(config =>
-    config.UseSqlServerStorage(configuration.GetConnectionString("HangfireConnection")));
+{
+    config.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+        .UseSimpleAssemblyNameTypeSerializer()
+        .UseRecommendedSerializerSettings()
+        .UseSqlServerStorage(configuration.GetConnectionString("HangfireConnection"),
+            new SqlServerStorageOptions
+            {
+                SchemaName = "Hangfire",
+                QueuePollInterval = TimeSpan.FromSeconds(1)
+            });
+});
 
 services.AddHangfireServer();
 services.AddHealthChecks();

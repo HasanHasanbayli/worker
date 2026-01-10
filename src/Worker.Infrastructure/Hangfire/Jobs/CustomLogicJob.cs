@@ -7,7 +7,12 @@ namespace Worker.Infrastructure.Hangfire.Jobs;
 public class CustomLogicJob(IJobStateService jobStateService, CalculateRetryPolicyService service) : IRecurringJob
 {
     public string JobId => "custom-logic-recurring-job";
-    public string Cron => CronExpression.DailyAt0200;
+
+    public string[] Cron =>
+    [
+        CronExpression.DailyAt0200,
+        CronExpression.EveryHour
+    ];
 
     public async Task ExecuteAsync(CancellationToken cancellationToken)
     {

@@ -6,7 +6,7 @@ namespace Worker.Infrastructure.Hangfire.Jobs;
 public class EmailJob(IJobStateService jobStateService, IEmailService emailService) : IRecurringJob
 {
     public string JobId => "email-recurring-job";
-    public string Cron => CronExpression.DailyAt0200;
+    public string[] Cron => [CronExpression.DailyAt0200];
 
     public async Task ExecuteAsync(CancellationToken cancellationToken)
     {
