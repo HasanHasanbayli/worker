@@ -14,7 +14,9 @@ public class HangfireRecurringJobScheduler(IEnumerable<IRecurringJob> jobs)
             int index = 0;
             foreach (string cron in job.Cron)
             {
-                string jobId = $"{job.JobId}:{index++}";
+                string jobId = job.Cron.Length == 1
+                    ? job.JobId
+                    : $"{job.JobId}:{index++}";
 
                 RecurringJob.AddOrUpdate(
                     recurringJobId: jobId,
